@@ -126,18 +126,7 @@ def cn_from_csv(df, distance, duration, exp_name):
     
     return G
 
-def draw_bar(D, label):
-    D = collections.OrderedDict(sorted(D.items()))
-    plt.bar(range(len(D)),  list(D.values()), align='center')
-    plt.xticks(range(len(D)), list(D.keys())) #[x+1 for x in 
-    plt.title(label)
-    name = label + '.png'
-    plt.savefig(name)
-    plt.show()
- 
-def cn_results_script(edgelist):
-    pass
-    
+
 def main():
     #load folder with .csv data for each flie
     path = r'H:\0_theory\interaction_c_n\data'
