@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d8d4473e-d271-4ca9-b473-829b6a0dbf65" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/compare_exp.py" beforeDir="false" afterPath="$PROJECT_DIR$/compare_exp.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/single_exp_results.py" beforeDir="false" afterPath="$PROJECT_DIR$/single_exp_results.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -12,16 +13,27 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/single_exp_results.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="430">
-              <caret line="258" column="76" selection-start-line="258" selection-start-column="76" selection-end-line="258" selection-end-column="76" />
+            <state relative-caret-position="134">
+              <caret line="232" selection-start-line="232" selection-end-line="235" selection-end-column="57" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
+                <element signature="e#1127#3487#0" />
+                <element signature="e#3511#3669#0" />
                 <element signature="e#3707#4966#0" />
-                <element signature="e#4967#6597#0" />
+                <element signature="e#5557#7126#0" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/compare_exp.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="501">
+              <caret line="64" column="57" lean-forward="true" selection-start-line="64" selection-start-column="57" selection-end-line="64" selection-end-column="57" />
             </state>
           </provider>
         </entry>
@@ -29,8 +41,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="471">
-              <caret line="147" selection-start-line="147" selection-end-line="148" selection-end-column="10" />
+            <state relative-caret-position="-45">
+              <caret line="64" column="85" lean-forward="true" selection-start-line="63" selection-start-column="8" selection-end-line="64" selection-end-column="85" />
               <folding>
                 <element signature="e#24#90#1" />
                 <element signature="e#283#595#0" />
@@ -57,6 +69,7 @@
       <list>
         <option value="$PROJECT_DIR$/main.py" />
         <option value="$PROJECT_DIR$/single_exp_results.py" />
+        <option value="$PROJECT_DIR$/compare_exp.py" />
       </list>
     </option>
   </component>
@@ -97,7 +110,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/compare_exp.py" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -194,8 +207,8 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="471">
-          <caret line="147" selection-start-line="147" selection-end-line="148" selection-end-column="10" />
+        <state relative-caret-position="-45">
+          <caret line="64" column="85" lean-forward="true" selection-start-line="63" selection-start-column="8" selection-end-line="64" selection-end-column="85" />
           <folding>
             <element signature="e#24#90#1" />
             <element signature="e#283#595#0" />
@@ -206,13 +219,22 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/single_exp_results.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="430">
-          <caret line="258" column="76" selection-start-line="258" selection-start-column="76" selection-end-line="258" selection-end-column="76" />
+        <state relative-caret-position="134">
+          <caret line="232" selection-start-line="232" selection-end-line="235" selection-end-column="57" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
+            <element signature="e#1127#3487#0" />
+            <element signature="e#3511#3669#0" />
             <element signature="e#3707#4966#0" />
-            <element signature="e#4967#6597#0" />
+            <element signature="e#5557#7126#0" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/compare_exp.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="501">
+          <caret line="64" column="57" lean-forward="true" selection-start-line="64" selection-start-column="57" selection-end-line="64" selection-end-column="57" />
         </state>
       </provider>
     </entry>

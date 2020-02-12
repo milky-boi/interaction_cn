@@ -150,7 +150,6 @@ def main_measures(G, exp_name):
     with open(name, 'w') as tf:
         tf.write(df.to_latex())
 
-
 def measures_of_prominence(G, exp_name):
     #Degree centrality
     degree_centrality = nx.degree_centrality(G)
@@ -189,6 +188,7 @@ def measures_of_prominence(G, exp_name):
     # Page rank
     page_rank = nx.pagerank(G, alpha=0.9)
     draw_bar(page_rank, 'Page rank')
+    draw_sorted_bar(page_rank, 'Page rank')
 
 def measures_of_range(G, exp_name):
     # Measures of range
