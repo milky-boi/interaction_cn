@@ -1,0 +1,16 @@
+,Exp1_16_01_2020_video_5
+Newman_modularity,ERROR
+average_betw_cent_unweighted,0.024843304843304843
+average_betw_cent_weighted,0.024843304843304843
+average_cl_coeff_unweighted,0.5638779906151767
+average_cl_coeff_weighted,0.5638779906151767
+average_degree,11.11111111111111
+degree_assortativity,-0.11726319952541064
+degree_heterogeneity,MISSING
+group_cohesion,MISSING
+maximum_modularity,ERROR
+network_density,0.42735042735042733
+network_diameter,3
+relative_modularity,MISSING
+total_edges,150.0
+total_nodes,27
