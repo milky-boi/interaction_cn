@@ -15,18 +15,8 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import collections
 
-def distances_f(df1, df2):
-    distances = []
-    for i in range(len(df1)):
-        x1 = df1.iloc[i]['pos x']
-        y1 = df1.iloc[i]['pos y']        
-        x2 = df2.iloc[i]['pos x']
-        y2 = df2.iloc[i]['pos y']
-        
-        dist = math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
-        distances.append(dist)
-        
-    return distances
+def distances(x): 
+    return math.sqrt((x['pos x2'] - x['pos x1'])**2 + (x['pos y2'] - x['pos y1'])**2)  
 
 def natural_sort(l): 
     convert = lambda text: int(text) if text.isdigit() else text.lower() 
@@ -35,9 +25,7 @@ def natural_sort(l):
     return sorted(l, key = alphanum_key)
 
 def distances_to_csv(path, exp_name):
-    
     start_time = time.time()
-    
     files = []
 
     for r, d, f in os.walk(path):
@@ -50,23 +38,30 @@ def distances_to_csv(path, exp_name):
     all_pairs = []
     
     for i in range(len(files)):
-        start_time = time.time()
-
-        df1 = pd.read_csv(files[i])   
+        df1 = pd.read_csv(files[i])
+        x1 = df1['pos x']
+        y1 = df1['pos y'] 
         next_flie = i + 1
-        
         if next_flie <= len(files):     
-            for j in range(next_flie, len(files)):
-                df2 = pd.read_csv(files[j])         
-                all_distances.append(distances_f(df1, df2))
+            for j in range(next_flie, len(files)):         
+                df2 = pd.read_csv(files[j])   
+                x2 = df2['pos x']
+                y2 = df2['pos y']
+                
+                df = pd.concat([x1, y1, x2, y2], axis=1)
+                df.columns = ['pos x1', 'pos y1', 'pos x2', 'pos y2']
+                
+                res_apply = df.apply(distances, axis=1)
+                res_apply = list(res_apply)
+                
+                all_distances.append(res_apply)                
                 all_pairs.append(str(i) + ' ' + str(j))
         
-        clean_time = time.time()-start_time      
-        print('flie ' + files[i][-9:-4] + " calc in: %.2f" % clean_time + " seconds")
-        
     df = pd.DataFrame.from_records(all_distances)
+    """
     df.replace(r'^\s*$', np.nan, regex=True)
     df= df.fillna(999)
+    """
     df= df.T
     df.columns = all_pairs
     
@@ -79,46 +74,38 @@ def distances_to_csv(path, exp_name):
     print(df.head())
     return df
     
-def cn_from_csv(df, distance, duration, exp_name):
+def cn_from_csv(df, distance, duration_sec, fps, exp_name):
     """Takes df, distance, duration_of_touch, exp_name as input and returns
-    edgelist calculated between flies for given distance and time"""
-    
+    edgelist calculated between flies for given distance and time"""   
     start_time = time.time()
     print(df.head())
-    
     df = df.T
+    duration = duration_sec*fps
+    G=nx.Graph()  
     
-    indexes = []
-    weights = []
-    for i in range(len(df)):
+    for column in df.columns:
+        df1 = df[column]  
+        mask = df1 < 20
+        
+        df_r = df1[mask]
         counter = 0
-        row = df.iloc[i]
-        for value in row:
-            if value <= distance:
+        for i in range(len(df_r)):           
+            value = df_r.iloc[i]   
+            if value <= distance:               
                 counter +=1
             else:
-                if counter >= duration:
-                    indexes.append(i)
-                    weights.append(float(counter/duration))                  
+                if counter > duration:
+                    start, end = column.split(' ')
+                    weight_ = float(fps/counter)                    
+                    G.add_edge(start, end, weight=weight_)                      
                 counter = 0
                 
-    node_pairs = df.iloc[indexes].index.values.tolist()   
-    dictionary = dict(zip(node_pairs, weights))
-    
-    G=nx.Graph()   
     print(G.nodes)
-    
-    for pair in dictionary:
-        start, end = pair.split(' ')
-        start, end = int(start), int(end)
-        weight_ = dictionary.get(pair)
-        G.add_edge(start, end, weight=weight_)
-    
-    print(G.nodes)
-    
-    name = 'results/' + exp_name + '.edgelist'
-    
+    name = 'results/' + exp_name + '.edgelist'    
     nx.write_edgelist(G, name, data=False)
+    
+    name = 'results/' + exp_name + '.gml'    
+    nx.write_gml(G, name)
     
     clean_time = time.time()-start_time
     print("Distances calculated in %.2f" % clean_time + " seconds")
@@ -129,19 +116,14 @@ def cn_from_csv(df, distance, duration, exp_name):
 
 def main():
     #load folder with .csv data for each flie
-    path = r'H:\0_theory\interaction_c_n\data'
-    exp_name = 'test_1'
-    
+    path = r'/home/firestarter/interaction_cn/v3'
+    exp_name = '16_01_2020_v3'
     df = distances_to_csv(path, exp_name)
     
     distance = 10
-    duration = 15
-    cn_from_csv(df, distance, duration, exp_name)
-    
-    #cn_results_script(edgelist)
-    
-    
-    
+    duration_sec = 0.5
+    fps = 25
+    cn_from_csv(df, distance, duration_sec, fps, exp_name)
 
     #CREATE log file track program execution time and memory usage
     
