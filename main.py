@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Tue Feb 11 00:26:47 2020
-
 @author: icecream boi
 """
 import os
@@ -79,15 +78,20 @@ def cn_from_csv(df, distance, duration_sec, fps, exp_name):
     edgelist calculated between flies for given distance and time"""   
     start_time = time.time()
     print(df.head())
-    df = df.T
-    duration = duration_sec*fps
+    #df = df.T
+    duration = int(duration_sec*fps)
     G=nx.Graph()  
+    
+    res = (" ".join(["".join(pair) for pair in list(df.columns)])).split(' ')
+    mylist = list(dict.fromkeys(res))
+    G.add_nodes_from(mylist)
     
     for column in df.columns:
         df1 = df[column]  
-        mask = df1 < 20
+        mask = df1 < 80
         
         df_r = df1[mask]
+    
         counter = 0
         for i in range(len(df_r)):           
             value = df_r.iloc[i]   
@@ -100,9 +104,10 @@ def cn_from_csv(df, distance, duration_sec, fps, exp_name):
                     G.add_edge(start, end, weight=weight_)                      
                 counter = 0
                 
-    print(G.nodes)
+    nx.draw(G)
+    
     name = 'results/' + exp_name + '.edgelist'    
-    nx.write_edgelist(G, name, data=False)
+    nx.write_edgelist(G, name, data=True)
     
     name = 'results/' + exp_name + '.gml'    
     nx.write_gml(G, name)
@@ -116,13 +121,13 @@ def cn_from_csv(df, distance, duration_sec, fps, exp_name):
 
 def main():
     #load folder with .csv data for each flie
-    path = r'/home/firestarter/interaction_cn/v3'
-    exp_name = '16_01_2020_v3'
+    path = path = r'H:\0_theory\interaction_c_n\raw_data\19_02_12_14'
+    exp_name = '19_02_12_14' 
     df = distances_to_csv(path, exp_name)
     
-    distance = 10
-    duration_sec = 0.5
-    fps = 25
+    distance = 20 #px distance, arena is 120mm wide, 1000x1000 on x,y axis
+    duration_sec = 0.6
+    fps = 30
     cn_from_csv(df, distance, duration_sec, fps, exp_name)
 
     #CREATE log file track program execution time and memory usage
