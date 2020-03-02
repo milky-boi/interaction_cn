@@ -1,3 +1,4 @@
+import os
 import operator
 import collections
 #import community
@@ -290,12 +291,12 @@ def main():
     #print('------------------------------------------------------------------------------------')
     
     
-    path = path = r'H:\0_theory\interaction_c_n\graphs'
+    path = path = r'H:\0_theory\interaction_c_n\results\graphs'
 
     files = []
     exp_names = []
     for r, d, f in os.walk(path):
-        f = natural_sort(f)
+        #f = natural_sort(f)
         for file in f:
             if '.gml' in file:
                 exp_names.append(file)
@@ -311,6 +312,7 @@ def main():
         nx.draw(G)  # networkx draw()
         plt.draw()  
         plt.title(exp_name)
+        plt.savefig(exp_name + '.png')
         plt.show()
         
         and_results(G, exp_name)

@@ -24,6 +24,11 @@ def natural_sort(l):
     return sorted(l, key = alphanum_key)
 
 def distances_to_csv(path, exp_name):
+    """ Loads files with flies positions in each frame, and returns distances between flies inf 
+    that frame.
+    Function returns .csv file, number of rows in the table corresponds to the number of frames in the video,
+    Number of columns is equal to the formula (n-1)*n / 2 where is n, number of flies.
+    """
     start_time = time.time()
     files = []
 
@@ -64,13 +69,23 @@ def distances_to_csv(path, exp_name):
     df= df.T
     df.columns = all_pairs
     
-    name = 'results/' + exp_name + '_distances_between_all_flies.csv'
+    name = 'results/all_distances/' + exp_name + '_distances_between_all_flies.csv'
     df.to_csv(name)
     
+    
+    
     clean_time = time.time()-start_time
-    print("Distances calculated in %.2f" % clean_time + " seconds")
-    print('distances between all flies saved to .csv')
+    
+    f= open("log_file.txt","a+")
+    f.write('exp_name:' + exp_name + ' files:' + str(len(files)) + 
+            ' rows:' + str(len(df1)) + " distances_proc_time(s): %.2f" % clean_time + " seconds\n")
+    
+    f.close() 
+    
+    print(exp_name + ' distances between all flies saved to .csv')
     print(df.head())
+    
+    
     return df
     
 def cn_from_csv(df, distance, duration_sec, fps, exp_name):
@@ -106,29 +121,59 @@ def cn_from_csv(df, distance, duration_sec, fps, exp_name):
                 
     nx.draw(G)
     
-    name = 'results/' + exp_name + '.edgelist'    
+    name = 'results/graphs/' + exp_name + '.edgelist'    
     nx.write_edgelist(G, name, data=True)
     
-    name = 'results/' + exp_name + '.gml'    
+    name = 'results/graphs/' + exp_name + '.gml'    
     nx.write_gml(G, name)
     
     clean_time = time.time()-start_time
-    print("Distances calculated in %.2f" % clean_time + " seconds")
-    print('Interaction edgelist created and saved in .edgelist')
     
-    return G
+    f= open("log_file.txt","a+")
+    f.write("network_creation_time:%.2f" % clean_time + " seconds \Nn)
+    f.close
+    print(exp_name + 'Interaction edgelist created and saved in .gml and .edgelist')
+    
+    #return G
 
 
 def main():
-    #load folder with .csv data for each flie
-    path = path = r'H:\0_theory\interaction_c_n\raw_data\19_02_12_14'
-    exp_name = '19_02_12_14' 
-    df = distances_to_csv(path, exp_name)
+    """
+    The program takes a folder containing a .csv record of measures that quantify
+    the behavior of each individual over a period of time. 
+    Using the distances_to_csv () function, it compares individuals relationships
+    over time (for example, distance between units in time) and returns .csv file.
+    The cn_from_csv () function takes a previously created .csv file and 
+    reutrns a weighted network based on the given parameters.
+    """
     
-    distance = 20 #px distance, arena is 120mm wide, 1000x1000 on x,y axis
-    duration_sec = 0.6
-    fps = 30
-    cn_from_csv(df, distance, duration_sec, fps, exp_name)
+    path = r'H:\0_theory\interaction_c_n\raw_data'
+    
+    experiments = {}
+    
+    # r=root, d=directories, f = files
+    for r, d, f in os.walk(path):
+        for folder in d:
+            experiments.update({folder : os.path.join(r, folder)})
+    
+    
+    #load folder with .csv data for each flie
+ 
+    
+    for exp_name, path in experiments.items():
+    #create cv of distacnes between flies 
+        df = distances_to_csv(path, exp_name)
+        
+        #interaction criteria for network creation
+        distance = 20 #px distance, arena is 120mm wide, 1000x1000 on x,y axis
+        duration_sec = 0.6
+        
+        #video fps
+        fps = 24
+        
+        #create net
+        cn_from_csv(df, distance, duration_sec, fps, exp_name)
+
 
     #CREATE log file track program execution time and memory usage
     
