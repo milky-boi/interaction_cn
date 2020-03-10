@@ -16,7 +16,7 @@ import numpy as np
 def draw_box_plot(d, title):
     # or backwards compatable    
     labels, data = [*zip(*d.items())]
-    labels = [label[4:] for label in labels]
+    labels = [label for label in labels]
     data = [list(d.values()) for d in data]
           
     average_bsl = mean([mean(e) for e in data[0:5]])
@@ -51,7 +51,7 @@ def distance_traveled(path, exp_name):
     fly_distances = {}   
      
     for fly, path in flies.items():   
-        fly = fly[0:-4]      
+        #fly = fly[0:-4]      
         df = pd.read_csv(path)
         df1 = df[['pos x', 'pos y']]
         #print(fly)
