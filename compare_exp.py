@@ -4,79 +4,130 @@ Created on Tue Feb 11 00:31:53 2020
 
 @author: icecream boi
 """
-def draw_sorted_bar(D, label):
-    #CHANGE TO LINE GRAPH
-    sorted_d = dict(sorted(D.items(), key=operator.itemgetter(1), reverse=True))
-    plt.bar(range(len(sorted_d)), list(sorted(D.values(), reverse=True)), align='center')
-    plt.xticks(range(len(sorted_d)), list(sorted_d.keys()), rotation=60)  # [x+1 for x in
 
-    name = label + '_sorted'
-    name_png = 'results/' + label + '_sorted.png'
-    plt.title(name)
-    plt.savefig(name_png)
-    #plt.clf()
+import os
+import community
+import networkx as nx
+import matplotlib.pyplot as plt
 
-def load_experiments:
-    """takes path as input and return list of graphs from experiments and 
-    names of experiments"""
-    pass
+def draw_box_plot(d, title):
+    # or backwards compatable    
+    labels, data = [*zip(*d.items())]
+    labels = [label[4:] for label in labels]
+    data = [list(d.values()) for d in data]
+          
+    average_bsl = mean([mean(e) for e in data[0:5]])
+    average_coc = mean([mean(e) for e in data[5:]])
     
+    plt.axhline(y=average_bsl, color='blue', label='Mean BSL')
+    plt.axhline(y=average_coc, color='red', label='Mean COC')
+    
+    plt.boxplot(data, labels)
+    plt.title(title)
+    plt.xticks(range(0, len(labels)+1), labels, rotation=60)
+    plt.axvspan(5.5, 11.5, alpha=0.05, color='red', label='COC pop')
+    plt.legend()
+    plt.show()
+    plt.cla()
+    plt.clf()
+    plt.close()
 
-def compare_experiments():
-    """returns dataframe of numeric network values and 
-    images of graphs created from sorted cn measures"""
-    pass
+def compare_measures(experiments_dict):
+    """
 
-def measures(G, exp_name):
-    #Degree centrality
-    degree_centrality = nx.degree_centrality(G)
-    draw_sorted_bar(degree_centrality, 'Degree centrality')
-    # Degree centralization MISSING
+    :param g:
+    :param exp_name:
+    :return:
+    """
+    # Degree centrality
+    d = {}  
+    for exp_name, path in experiments_dict.items():         
+        g = nx.read_gml(path)    
+        degree_centrality = nx.degree_centrality(g)
+        d.update({exp_name[0:-4] : degree_centrality})
+    draw_box_plot(d, 'degree_centrality')
 
     # eigenvalue centrality.
-    eigenvector_centrality = nx.eigenvector_centrality(G)
-    draw_sorted_bar(eigenvector_centrality, 'Eigenvector centrality')
+    d = {}  
+    for exp_name, path in experiments_dict.items():         
+        g = nx.read_gml(path)    
+        eigenvector_centrality = nx.eigenvector_centrality(g)
+        d.update({exp_name[0:-4] : eigenvector_centrality})
+    draw_box_plot(d, 'eigenvector_centrality')
 
     # Closeness centrality
-    closeness_centrality = nx.closeness_centrality(G)
-    draw_sorted_bar(closeness_centrality, 'Closeness centrality')
-
-    # Closeness centralization MISSING
+    d = {}  
+    for exp_name, path in experiments_dict.items():         
+        g = nx.read_gml(path) 
+        closeness_centrality = nx.closeness_centrality(g)
+        d.update({exp_name[0:-4] : closeness_centrality})
+    draw_box_plot(d, 'closeness_centrality')
 
     # Betweenness centrality
-    betweenness_centrality = nx.betweenness_centrality(G, weight=None)
-    draw_sorted_bar(betweenness_centrality, 'Betweenness centrality')
+    d = {}  
+    for exp_name, path in experiments_dict.items():         
+        g = nx.read_gml(path) 
+        betweenness_centrality = nx.betweenness_centrality(g, weight=None)
+        d.update({exp_name[0:-4] : betweenness_centrality})
+    draw_box_plot(d, 'betweenness_centrality')
 
     # Betweenness centrality WEIGHTED
-    betweenness_centrality = nx.betweenness_centrality(G, weight=G.edges(data=True))
-    draw_sorted_bar(betweenness_centrality, 'Betweenness centrality')
-    # Betweenness centralization MISSING
+    d = {}  
+    for exp_name, path in experiments_dict.items():         
+        g = nx.read_gml(path) 
+        betweenness_centrality_w = nx.betweenness_centrality(g, weight=g.edges(data=True))
+        d.update({exp_name[0:-4] : betweenness_centrality_w})
+    draw_box_plot(d, 'betweenness_centrality_weighted')
+    
 
     # Information centrality
-    information_centrality = nx.information_centrality(G)
-    draw_sorted_bar(information_centrality, 'Information centrality')
+    d = {}  
+    for exp_name, path in experiments_dict.items():         
+        g = nx.read_gml(path)
+        gc = max(nx.connected_component_subgraphs(g), key=len)
+        information_centrality = nx.information_centrality(gc)
+        d.update({exp_name[0:-4] : information_centrality})
+    draw_box_plot(d, 'information_centrality')
 
     # Page rank
-    page_rank = nx.pagerank(G, alpha=0.9)
-    draw_sorted_bar(page_rank, 'Page rank')
+    d = {}  
+    for exp_name, path in experiments_dict.items():         
+        g = nx.read_gml(path)
+        page_rank = nx.pagerank(g, alpha=0.9)
+        d.update({exp_name[0:-4] : page_rank})
+    draw_box_plot(d, 'page_rank')
+    
+    d = {}  
+    for exp_name, path in experiments_dict.items():         
+        g = nx.read_gml(path)
+        clustering_coeff_w = nx.clustering(g, weight='weight')
+        d.update({exp_name[0:-4] : clustering_coeff_w})
+    draw_box_plot(d, 'clustering coeff w')
 
-    #Clustering coeff
-    clustering_coeff = nx.clustering(G)
-    draw_sorted_bar(clustering_coeff, 'Clustering coeff')
-
+def distances_box_plot(d):
+    d = {}  
+    for exp_name, path in experiments_dict.items():         
+        g = nx.read_gml(path)    
+        degree_centrality = nx.degree_centrality(g)
+        d.update({exp_name[0:-4] : degree_centrality})
+    draw_box_plot(d, 'degree_centrality')
+    
 
 def main():
-    #load folder with .csv data for each flie
-    path = ''
-    load_experiments(path)
-    experiments_edges = []
-    experiments_names = []
-
-    measures(G, experiments_names)
-
-    compare_experiments(experiments_edges, experiments_names)
-
+    path = r'H:\0_theory\interaction_c_n\results\graphs'
     
+    experiments_dicts = {}
+    for r, d, f in os.walk(path):
+        # f = natural_sort(f)
+        for file in f:
+            if '.gml' in file:
+                experiments_dicts.update({file : os.path.join(r, file)})
     
+    compare_measures(experiments_dicts)
+
+        
+    
+
+
 if __name__ == '__main__':
     main()
