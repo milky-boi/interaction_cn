@@ -9,24 +9,34 @@ import os
 import community
 import networkx as nx
 import matplotlib.pyplot as plt
+from statistics import mean 
 
 def draw_box_plot(d, title):
     # or backwards compatable    
     labels, data = [*zip(*d.items())]
-    labels = [label[4:] for label in labels]
+    labels = [label for label in labels]
     data = [list(d.values()) for d in data]
           
     average_bsl = mean([mean(e) for e in data[0:5]])
     average_coc = mean([mean(e) for e in data[5:]])
+    
+    plt.figure(figsize=(9,6))
     
     plt.axhline(y=average_bsl, color='blue', label='Mean BSL')
     plt.axhline(y=average_coc, color='red', label='Mean COC')
     
     plt.boxplot(data, labels)
     plt.title(title)
-    plt.xticks(range(0, len(labels)+1), labels, rotation=60)
+    print(labels)
+    range_num = [num for num in range(0, len(labels)+1)]
+    plt.xticks(range_num, labels, rotation=60)
     plt.axvspan(5.5, 11.5, alpha=0.05, color='red', label='COC pop')
     plt.legend()
+
+    
+    name_png = 'results/img/' + title + '.png'
+    plt.savefig(name_png, dpi=250)
+    plt.tight_layout()
     plt.show()
     plt.cla()
     plt.clf()

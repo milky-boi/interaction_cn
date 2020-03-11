@@ -22,14 +22,21 @@ def draw_box_plot(d, title):
     average_bsl = mean([mean(e) for e in data[0:5]])
     average_coc = mean([mean(e) for e in data[5:]])
     
+    plt.figure(figsize=(9,6))
     plt.axhline(y=average_bsl, color='blue', label='Mean BSL')
     plt.axhline(y=average_coc, color='red', label='Mean COC')
     
     plt.boxplot(data, labels)
     plt.title(title)
-    plt.xticks(range(0, len(labels)+1), labels, rotation=60)
+    range_num = [num+0.5 for num in range(0, len(labels)+1)]
+    plt.xticks(range_num, labels, rotation=60)
     plt.axvspan(5.5, 11.5, alpha=0.05, color='red', label='COC pop')
     plt.legend()
+
+    
+    name_png = 'results/img/' + title + '.png'
+    plt.savefig(name_png, dpi=250)
+    plt.tight_layout()
     plt.show()
     plt.cla()
     plt.clf()
@@ -38,6 +45,7 @@ def draw_box_plot(d, title):
     
 def distances(x): 
     return math.sqrt((x['pos x2'] - x['pos x1'])**2 + (x['pos y2'] - x['pos y1'])**2)  
+
 
 def distance_traveled(path, exp_name):
     flies = {}
@@ -82,7 +90,6 @@ def distance_traveled(path, exp_name):
     return fly_distances
 
 
-
 def main():
     """
     """
@@ -104,7 +111,7 @@ def main():
         d = distance_traveled(path, exp_name)
         all_distances_traveled.update({exp_name : d})
     
-    draw_box_plot(all_distances_traveled, 'distances traveled')    
+    draw_box_plot(all_distances_traveled, 'distance traveled')    
     
 if __name__ == '__main__':
     main()
